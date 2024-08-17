@@ -1,7 +1,8 @@
 import {
+  AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay,
   Button,
   Flex,
-  Spinner,
+  Spinner, useDisclosure,
 } from "@chakra-ui/react"
 import React, { useEffect, useState } from "react"
 import { BaseError, useAccount, useBalance, useWriteContract } from "wagmi"
@@ -23,6 +24,16 @@ const WrapUnwrapETH: React.FC = () => {
   const { data: blockNumber } = useBlockNumber({ watch: true });
 
   const { data: hash, error, isPending, writeContract } = useWriteContract()
+
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const cancelRef = React.useRef();
+
+  const handleConfirm = () => {
+    // Add your confirmation logic here
+    console.log("Confirmed!");
+    onClose();
+    executeSwap()
+  };
 
   useEffect(() => {
     ethRefetch();
@@ -100,12 +111,12 @@ const WrapUnwrapETH: React.FC = () => {
           />
       </Flex>
       <Button
-        onClick={()=> {executeSwap()}}
+        onClick={onOpen}
         py="7"
         fontSize="2xl"
         colorScheme="twitter"
         rounded="xl"
-        isDisabled={isConfirming || isPending}
+        isDisabled={isConfirming || isPending || amount == '0'}
       >
         {(isConfirming || isPending) ? <Spinner /> : "Confirm"}
       </Button>
@@ -114,7 +125,34 @@ const WrapUnwrapETH: React.FC = () => {
       {error && (
         <div>Error: {(error as BaseError).shortMessage || error.message}</div>
       )}
+      <AlertDialog
+          isOpen={isOpen}
+          leastDestructiveRef={cancelRef}
+          onClose={onClose}
+      >
+        <AlertDialogOverlay>
+          <AlertDialogContent>
+            <AlertDialogHeader fontSize="lg" fontWeight="bold">
+              Swap
+            </AlertDialogHeader>
+
+            <AlertDialogBody>
+              Are you sure?
+            </AlertDialogBody>
+
+            <AlertDialogFooter>
+              <Button ref={cancelRef} onClick={onClose}>
+                Cancel
+              </Button>
+              <Button colorScheme="twitter" onClick={handleConfirm} ml={3}>
+                Confirm
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialogOverlay>
+      </AlertDialog>
     </Flex>
+
   )
 }
 

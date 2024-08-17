@@ -96,8 +96,8 @@ const App: React.FC = () => {
                     </Heading>
                     <Text fontSize="lg" color="gray.500">
                         {isConnected
-                            ? `Connected as ${address.substring(0, 6)}...${address.substring(
-                                address.length - 4
+                            ? `Connected as ${address?.substring(0, 6)}...${address?.substring(
+                                address?.length - 4
                             )}`
                             : "Connect your wallet to get started."}
                     </Text>

@@ -4,7 +4,6 @@ import {Button, Flex, Spinner, Box, Heading, Text, VStack, useToast} from '@chak
 import {SwapAmountProvider} from './context/SwapAmountContext';
 import {useEffect, useState} from "react";
 
-
 const App: React.FC = () => {
     const {address, isConnected, isConnecting} = useAccount();
     const toast = useToast();
@@ -14,13 +13,9 @@ const App: React.FC = () => {
             setIsLoading(false); // Set loading to false after initial check
         }, 1000);
         if (isConnected) {
-            console.log('Wallet is connected:', address);
             handleConnect()
-            // Add any additional logic you want to execute when the wallet connects
         } else {
-            console.log('Wallet is disconnected');
             handleDisconnect()
-            // Add any logic for when the wallet disconnects
         }
         return () => clearTimeout(timer); // Cleanup the timeout on unmount
     }, [isConnected, address]); // Watch both isConnected and address
@@ -44,7 +39,6 @@ const App: React.FC = () => {
                 isClosable: true,
             });
         }
-
     };
     if (isConnecting)
         return (
@@ -85,10 +79,10 @@ const App: React.FC = () => {
                 boxShadow="xl"
                 padding="4"
                 transition="all 0.3s ease"
-                _hover={{
-                    boxShadow: '2xl',
-                    transform: 'scale(1.05)',
-                }}
+                // _hover={{
+                //     boxShadow: '2xl',
+                //     transform: 'scale(1.05)',
+                // }}
             >
                 <VStack spacing={6}>
                     <Heading as="h1" size="2xl">
